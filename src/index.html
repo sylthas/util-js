@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<style type="text/css">
+	.test {
+		color : #fff;
+	}
+	</style>
+	<script type="text/javascript" src="Fx.min.js"></script>
+	<script type="text/javascript">
+	
+	function test() {
+		//_form('#tFrm');
+		$.log($('#tFrm').serialize());
+	}
+	function _form(id) {
+		var form = $(id)[0];
+		if (form.nodeName != 'FORM') return;
+		var elements = form.elements;
+		for (var i=0,len=elements.length;i<len;i++) {
+			$.log(elements[i].tagName);
+		}
+	}
+	function remo () {
+		$('#txt').fadeOut();
+	}
+		
+</script></head>
+<body>
+	<form id="tFrm" action="#" post="get">
+		user:
+		<input type="text" name="username" />
+		<br/>
+		pass:
+		<input type="password" name="password" />
+		<br/>
+		isAdmin
+		<input name="isA" type="radio" value="1" />
+		是
+		<input type="radio" name="isA" value="2" checked="checked" />
+		否
+		<br/>
+		<select name="avatar">
+			<option>测试1</option>
+			<option >测试2</option>
+		</select><br/>
+		<select multiple="multiple" name="addr">
+			<option>ddddd</option>
+			<option>sssss</option>
+		</select>
+		<br/>
+		<textarea name="content">xxxxx</textarea><br/>
+		<input type="checkbox" name="dd" value="1" />dd
+		<input type="checkbox" name="dd2" value="2" />dd2<br/>
+		<input name="btn" type="button" value="测试" onclick="test()" />
+		<input type="submit" />
+	</form>
+</body>
+</html>
