@@ -623,8 +623,8 @@
 	})();
 
 	/* ################# Fx Ajax ################ */
-	Fx.Ajax = {
-		_xmlHttpReq: function() {
+	Fx.Ajax = (function() {
+		function _xmlHttpReq() {
 			if (window.ActiveXObject) {
 				try {
 					return new ActiveXObject('Msxm12.XMLHTTP');
@@ -638,26 +638,29 @@
 					return new XMLHttpRequest();
 				} catch (e) {}
 			}
-		},
-		get: function(url, func, type) {
-			return this.request(url, {
+		};
+
+		function get(url, func, type) {
+			return request(url, {
 				async: true,
 				method: 'GET',
 				type: type,
 				success: func
 			});
-		},
-		post: function(url, data, func, type, encode) {
-			return this.request(url, {
+		};
+
+		function post(url, data, func, type, encode) {
+			return request(url, {
 				async: true,
 				method: 'POST',
 				type: type,
 				encode: encode,
 				success: func
 			});
-		},
-		request: function(url, opt) {
-			var xhr = this._xmlHttpReq();
+		};
+
+		function request(url, opt) {
+			var xhr = _xmlHttpReq();
 			if (!xhr) return;
 
 			function fn() {}
@@ -672,7 +675,7 @@
 				failure = opt.failure || fn;
 			method = method.toUpperCase();
 			if (data && typeof data == "object") {
-				data = this._serialize(data);
+				data = _serialize(data);
 			}
 			if (method == "GET" && data) {
 				url += (url.indexOf("?") == -1 ? "?" : "&") + data;
@@ -689,7 +692,7 @@
 			var _this = this;
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState == 4 && !isTimeout) {
-					_this._onStateChange(xhr, type, success, failure);
+					_onStateChange(xhr, type, success, failure);
 					if (timer) clearTimeout(timer);
 				} else {}
 			};
@@ -699,8 +702,9 @@
 			}
 			xhr.send(data);
 			return xhr;
-		},
-		_serialize: function(data) {
+		};
+
+		function _serialize(data) {
 			var a = [];
 			for (var k in data) {
 				var val = data[k];
@@ -713,8 +717,9 @@
 				}
 			}
 			return a.join("&");
-		},
-		_onStateChange: function(xhr, type, success, failure) {
+		};
+
+		function _onStateChange(xhr, type, success, failure) {
 			failure = failure || function() {};
 			var s = xhr.status,
 				result = null;
@@ -745,8 +750,13 @@
 				failure(xhr, xhr.status);
 			}
 			xhr = null;
-		}
-	};
+		};
+		return {
+			get: get,
+			post: post,
+			ajax: request
+		};
+	})();
 
 	/* ################# Fx Form ################ */
 	Fx.Form = {
@@ -770,7 +780,8 @@
 						break;
 					case 'select-multiple':
 						for (var k = 0, kl = e.length; k < kl; k++) {
-							var opt = e.options[k],value=null;
+							var opt = e.options[k],
+								value = null;
 							if (opt.selected) {
 								value = typeof opt.value == 'undefined' ? opt.text : opt.value;
 								data.push(encodeURIComponent(e.name) + '=' + encodeURIComponent(value));
@@ -786,7 +797,7 @@
 
 					case 'radio':
 					case 'checkbox':
-						if (!e.checked) 
+						if (!e.checked)
 							break;
 					default:
 						data.push(encodeURIComponent(e.name) + "=" + encodeURIComponent(e.value));
@@ -833,7 +844,7 @@
 
 					case 'radio':
 					case 'checkbox':
-						if (!e.checked) 
+						if (!e.checked)
 							break;
 					default:
 						data[e.name] = e.value;
@@ -914,27 +925,19 @@
 	});
 
 	// 扩展 Ajax 绑定
+	Fx.extend(Fx.Ajax);
+
 	Fx.extend({
-		ajax: function(url, opt) {
-			Fx.Ajax.request(url, opt);
-		},
-		get: function(url, func, type) {
-			Fx.Ajax.get(url, func, type);
-		},
-		post: function(url, data, func, type, encode) {
-			Fx.Ajax.post(url, data, func, type, encode);
-		},
 		bp: function() {
 			// BasePath
-			var cwp = window.document.location.href;
-			var pn = window.document.location.pathname;
-			var p = cwp.indexOf(pn);
-			var lp = cwp.substring(0,pos);
-			var pj = pn.substring(0,pn.substr(1).indexOf('/') + 1);
-			return lp + pj;
+			var urlPath = window.document.location.href;
+			var pathName = window.document.location.pathname;
+			var pos = pathName == '/' ? urlPath.length - 1 : urlPath.indexOf(pathName);
+			var localhostPaht = urlPath.substring(0, pos);
+			var projectName = pathName == '/' ? '' : pathName.substring(0, pathName.substr(1).indexOf("/") + 1);
+			return localhostPaht + projectName;
 		}
 	});
-
 	// 若$变量没有被使用则绑定Fx到$全局变量上
 	window.$ = window.$ || Fx;
 })(window);
