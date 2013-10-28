@@ -938,6 +938,22 @@
 			return localhostPaht + projectName;
 		}
 	});
+
+	/* ################# Fx Name 选择器扩展 ################ */
+	Fx.$ = function(name) {
+		if (typeof name != 'string')
+			return null;
+		var c = document.getElementsByName(name);
+		try {
+			return Fx(Array.prototype.slice.call(c));
+		} catch (e) {
+			var ret = [];
+			for (var i = 0, len = c.length; i < len; ++i) {
+				ret[i] = c[i];
+			}
+			return Fx(ret);
+		}
+	}
 	// 若$变量没有被使用则绑定Fx到$全局变量上
 	window.$ = window.$ || Fx;
 })(window);
