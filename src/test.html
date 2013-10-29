@@ -1,19 +1,70 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
-	<script type="text/javascript" src="util.event.js"></script>
-	<script type="text/javascript" src="util.strings.js"></script>
-	<script type="text/javascript">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="" type="text/css" />
+    <script type="text/javascript" src="Fx.min.js"></script>
+    <script type="text/javascript" src="Fx.validate.min.js"></script>
+    <script type="text/javascript" >
 
-	function test(event) {
-		console.info(Event.getEvent(event));
-	}
-		
+    function test() {
+       $('#tFrm').validate({
+        rules : {
+            username : {
+                required : true,
+                minlength: 3,
+                maxlength:10,
+                regex : /^[a-zA-z]+[\w]+$/ // 正则验证必须以字母开头
+            },
+            password : {
+                required: true,
+                rangelength: [6,16] // 长度范围
+            },
+            repassword: {
+                equals : 'password' // 匹配  name
+            },
+            email : {
+                email : true 
+            },
+            url : {
+                url : true
+            },
+            age : {
+                range: [18,100] // 数字范围
+            }
+        },
+        messages :  {
+            repassword : { equals : "两次输入的密码不一致"} // 自定义提示信息
+        }
+       },function(e,msg) {
+            $.log(e);
+            e.css('background','#ff0');
+            //e.css('border','1px solid #ccc');
+            e.after('<span id=' + e.prop('name') +'-msg>' + msg + '</span>');
+            $('#' + e.prop('name') + '-msg').fadeOut(30);
+            setTimeout(function(){
+                $('#' + e.prop('name') + '-msg').remove();
+            },2500);
+            $.log(msg);
+       });
+    }
+    function _t(v, n, m) {
+        return +v >= n && +v <= m;
+    }
 </script>
+    <title>Examples</title>
 </head>
 <body>
-	<input type="button" onclick="test(event)" value="测试" />
+    <form id="tFrm" action="#">
+    username:<input type="text" name="username" /> <br/>
+    email:<input type="text" name="email" /><br/>
+    password:<input type="password" name="password" /> <br/>
+    repassword:<input type="password" name="repassword" /> <br/>
+    url:<input type="text" name="url" /><br/>
+    age:<input type="text" name="age" /><br/>
+    <input type="button" value="测试" onclick="test()" >
+    </form>
 </body>
 </html>

@@ -953,7 +953,13 @@
 			}
 			return Fx(ret);
 		}
-	}
+	};
+
+	/* ################# Fx  对象Prototype扩展 ################ */
+	Fx.protoExtend = function(opt) {
+		Fx.Object.extend(fx_prototype, opt);
+	} ;
+
 	// 若$变量没有被使用则绑定Fx到$全局变量上
 	window.$ = window.$ || Fx;
 })(window);
