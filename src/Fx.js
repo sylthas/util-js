@@ -2,7 +2,7 @@
  * Fx JS . Sylthas' JS Lib 简单是美
  * @authors Sylthas (sylthasgg@gmail.com)
  * @date    2013-10-27 16:11:15
- * @version 1.0 BEAT
+ * @version 1.0 BETA
  */
 (function(window, undefined) {
 	/* ################# 选择器 ################ */
